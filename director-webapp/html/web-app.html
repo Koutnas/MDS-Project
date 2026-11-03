@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Director Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sidebar-scroll { max-height: calc(100vh - 60px); overflow-y: auto; }
+        .preview-card { cursor: pointer; transition: all 0.2s ease-in-out; border-width: 3px !important; }
+        .preview-card:hover { transform: scale(1.02); }
+    </style>
+    <script src="/static/js/web-app.js" defer></script>
+</head>
+<body class="bg-dark text-light vh-100 overflow-hidden">
+    
+    <nav class="navbar navbar-dark bg-dark border-bottom px-3 py-2">
+        <span class="navbar-brand mb-0 h1 fs-5">Director Panel</span>
+        <button class="btn btn-sm btn-primary" onclick="addSpeaker()">+ Add Remote Speaker</button>
+    </nav>
+
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            
+            <!-- Credentials & Management Table -->
+            <div class="col-md-8 col-lg-9 p-4">
+                <h5 class="mb-3">Active SRT Connections</h5>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Speaker</th>
+                                <th>Stream ID</th>
+                                <th>Port</th>
+                                <th>Pre-Shared Key</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="credentials-table-body">
+                            <!-- Dynamically added rows go here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Clickable Previews Sidebar -->
+            <div class="col-md-4 col-lg-3 border-start border-secondary bg-dark p-3 sidebar-scroll" id="preview-sidebar">
+                
+            </div>
+        </div>
+    </div>
+</body>
+</html>
