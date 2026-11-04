@@ -1,0 +1,1 @@
+ffmpeg -re -stream_loop -1 -i cyber.mp4 -c:v libx264 -preset veryfast -tune zerolatency -g 60 -b:v 2500k -c:a aac -b:a 128k -f mpegts "srt://127.0.0.1:9003?mode=caller&passphrase=QN37jpyuNRQ67vg7TKewjA&pbkeylen=16&streamid=z0rXGPtJyb9KSzOivvGioA"
