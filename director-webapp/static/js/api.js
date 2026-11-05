@@ -16,12 +16,15 @@ async function refreshSpeakers() {
                 updateWebUI(speaker.port, speaker.psk, speaker.uniqueId);
             }
             setCardLive(speaker.uniqueId,speaker.is_selected,speaker.is_up)
-            if(speaker.is_up){
+            if(speaker.is_selected){
                 defSelected=false
             }
         }
+        //Handling of the standby
         if(defSelected){
             setCardLive("0",true,true)
+        }else{
+            setCardLive("0",false,true)
         }
         //Pruning for deleted 
         const tableBody = document.getElementById('credentials-table-body');
