@@ -2,13 +2,16 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from functools import wraps
 import obsService
 import cryptoService
+import heartbeat
+import os
 
 app = Flask(__name__, template_folder='../html', static_folder='../static')
+
 
 obsController = obsService.OBSController()
 crypto = cryptoService.CryptoService()
 sceneCache = {} #Holds state for updating the preview
-selected_scene = "" #Holds state for currently selected speaker
+heart = heartbeat.Heartbeat()
 
 app.secret_key = 'replace-this-with-a-random-secure-string'
 DIRECTOR_PASSWORD = "admin"
@@ -81,12 +84,13 @@ def refresh_speakers():
 
     for uniqueId in sceneCache:
         is_selected = True if live_port == sceneCache[uniqueId]["port"] else False
+        scene_name,source_name = obsController.port_to_names(sceneCache[uniqueId]["port"])
         data.append({
             "uniqueId": uniqueId, 
             "port": sceneCache[uniqueId]["port"], 
             "psk": sceneCache[uniqueId]["psk"],
             "is_selected": is_selected,
-            "is_up": obsController.is_srt_stream_live(sceneCache[uniqueId]["port"])
+            "is_up": obsController.is_stream_live(scene_name,source_name)
         })
     return jsonify(data)
 
@@ -97,8 +101,12 @@ def switch_scene():
     data = request.json
     
     new_id = data["uniqueId"]
+
+    if(new_id == "0"):
+        obsController.switch_obs_scene("Standby")
+        return {"status": "success"}, 200
+
     port = sceneCache[new_id]["port"]
-    
     obsController.switch_obs_scene(f"Scene_{port-9000}")
     return {"status": "success"}, 200
 
@@ -109,6 +117,7 @@ def refresh_previews():
     for uniqueId in sceneCache:
         uri = obsController.get_screenshot_uri(f"Scene_{sceneCache[uniqueId]["port"] - 9000}")
         result[uniqueId] = uri
+    result["0"] = obsController.get_screenshot_uri("Standby")
     return jsonify(result)
 
 #######################################HELPER NO WEB ACCESS###########################################
@@ -122,4 +131,6 @@ def get_live_port():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+        heart.start_heartbeat()
+    app.run(debug=True, host='127.0.0.1', port=5000)

@@ -128,10 +128,7 @@ class OBSController:
             return None 
         return resp.image_data
 
-    def is_srt_stream_live(self, srt_port):
-        idx = srt_port - 9000
-        scene_name = f"Scene_{idx}"
-        source_name = f"SRT_{idx}"
+    def is_stream_live(self,scene_name, source_name):
         
         item_id = self.client.get_scene_item_id(scene_name, source_name).scene_item_id
         transform = self.client.get_scene_item_transform(scene_name, item_id).scene_item_transform
@@ -148,3 +145,10 @@ class OBSController:
         if self.client:
             self.client.start_stream()
             print("OBS stream started.")
+    @staticmethod
+    def port_to_names(port):
+        ctx = port-9000
+        scene_name = f"Scene_{ctx}"
+        scene_input = f"SRT_{ctx}"
+
+        return scene_name, scene_input

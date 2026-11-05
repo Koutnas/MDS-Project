@@ -7,6 +7,7 @@ async function refreshSpeakers() {
         }
         const data = await response.json();
         const activeIds = new Set();
+        var defSelected = true;
 
         for (const speaker of data) {
             activeIds.add(String(speaker.uniqueId));
@@ -15,6 +16,12 @@ async function refreshSpeakers() {
                 updateWebUI(speaker.port, speaker.psk, speaker.uniqueId);
             }
             setCardLive(speaker.uniqueId,speaker.is_selected,speaker.is_up)
+            if(speaker.is_up){
+                defSelected=false
+            }
+        }
+        if(defSelected){
+            setCardLive("0",true,true)
         }
         //Pruning for deleted 
         const tableBody = document.getElementById('credentials-table-body');
