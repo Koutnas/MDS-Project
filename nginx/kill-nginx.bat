@@ -1,0 +1,3 @@
+@ECHO OFF
+ECHO Killing any existing Nginx processes...
+taskkill /IM nginx.exe /F >NUL 2>&1 && (ECHO nginx zastaveny.) || (ECHO nginx nebezal - nie je co zastavit.)

@@ -1,2 +1,9 @@
 .venv
 __pycache__
+
+# nginx - vygenerovane docasne subory
+nginx/temp/
+nginx/logs/*
+!nginx/logs/.gitkeep
+nginx/recordings/*
+!nginx/recordings/.gitkeep
